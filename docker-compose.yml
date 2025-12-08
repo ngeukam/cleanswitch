@@ -16,10 +16,10 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    command: 
-      - --default-authentication-plugin=mysql_native_password
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
+    # command: 
+    #   - --default-authentication-plugin=mysql_native_password
+    #   - --character-set-server=utf8mb4
+    #   - --collation-server=utf8mb4_unicode_ci
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DATABASE_ROOT_PASSWORD}"]
       timeout: 20s
