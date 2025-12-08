@@ -1,0 +1,26 @@
+FROM nginx:alpine
+
+# Remove default configs
+RUN rm -f /etc/nginx/conf.d/*
+
+# Install curl for healthchecks
+RUN apk add --no-cache curl
+
+# Copy custom configurations
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/conf.d/* /etc/nginx/conf.d/
+
+# Create non-root user
+RUN addgroup -g 1001 -S nginxgroup && \
+    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginxgroup -g nginx nginxuser && \
+    chown -R nginxuser:nginxgroup /var/cache/nginx && \
+    chown -R nginxuser:nginxgroup /var/log/nginx
+
+USER nginxuser
+
+EXPOSE 80 443
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/health || exit 1
+
+CMD ["nginx", "-g", "daemon off;"]

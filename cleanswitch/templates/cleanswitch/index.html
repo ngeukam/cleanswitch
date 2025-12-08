@@ -1,0 +1,86 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}CleanSwitch{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <style>
+        /* Minimal default styles if no static file present */
+        :root{--accent:#0078d4;--muted:#666}
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.4;color:#111;margin:0;background:#f7f8fb}
+        .container{max-width:1000px;margin:2rem auto;padding:1rem}
+        header{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+        .brand{display:flex;align-items:center;gap:.6rem}
+        .logo{width:40px;height:40px;border-radius:6px;background:linear-gradient(135deg,var(--accent),#005a9e);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+        nav a{color:var(--muted);text-decoration:none;margin-left:1rem}
+        .hero{background:white;border-radius:10px;padding:1.5rem;margin-top:1rem;box-shadow:0 6px 18px rgba(12,18,30,0.06)}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+        .card{background:white;padding:1rem;border-radius:8px;box-shadow:0 6px 14px rgba(12,18,30,0.04)}
+        footer{color:var(--muted);text-align:center;margin:2rem 0;font-size:.9rem}
+        .btn{background:var(--accent);color:white;padding:.45rem .8rem;border-radius:6px;text-decoration:none;font-weight:600}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo">CS</div>
+                <div>
+                    <div style="font-weight:700">CleanSwitch</div>
+                    <div style="font-size:.85rem;color:var(--muted)">Admin dashboard</div>
+                </div>
+            </div>
+            <nav>
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'about' %}">About</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+                    <div>
+                        <h1 style="margin:.2rem 0">Welcome{% if user.is_authenticated %}, {{ user.get_username }}{% endif %}</h1>
+                        <p style="color:var(--muted);margin:.4rem 0 0">A lightweight Django template to get started with CleanSwitch. Use this page to surface key metrics and quick actions.</p>
+                    </div>
+                    <div>
+                        <a class="btn" href="{% url 'admin:index' %}">Go to Admin</a>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top:1rem">
+                    <div class="card">
+                        <h3 style="margin:.1rem 0">Status</h3>
+                        <p style="color:var(--muted);margin:.4rem 0">All systems operational</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin:.1rem 0">Users</h3>
+                        <p style="color:var(--muted);margin:.4rem 0">Active users: {{ active_users|default:"—" }}</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin:.1rem 0">Recent Activity</h3>
+                        <p style="color:var(--muted);margin:.4rem 0">No recent events</p>
+                    </div>
+                </div>
+            </section>
+
+            {% block content %}
+            <!-- Additional page-specific content can be placed here -->
+            {% endblock %}
+        </main>
+
+        <footer>
+            &copy; {{ now.year }} CleanSwitch — Built with Django
+        </footer>
+    </div>
+
+   
+</body>
+</html>
