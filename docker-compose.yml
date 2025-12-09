@@ -99,8 +99,6 @@ services:
     restart: unless-stopped
     expose:
       - "3000"
-    volumes:
-      - frontend_static:/usr/share/nginx/html
     networks:
       - app_network
     depends_on:
@@ -126,8 +124,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
-      # Mount React static files from frontend container
-      - frontend_static:/usr/share/nginx/html:ro
+      - ./fe-cleanswitch/build:/usr/share/nginx/html:ro
     networks:
       - app_network
     healthcheck:
@@ -141,7 +138,6 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
-  frontend_static:
 
 networks:
   app_network:
