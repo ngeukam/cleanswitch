@@ -10,13 +10,18 @@ RUN apk add --no-cache curl
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY nginx/conf.d/* /etc/nginx/conf.d/
 
-# Create non-root user
-RUN addgroup -g 1001 -S nginxgroup && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginxgroup -g nginx nginxuser && \
-    chown -R nginxuser:nginxgroup /var/cache/nginx && \
-    chown -R nginxuser:nginxgroup /var/log/nginx
+# Create certbot directory for ACME challenges
+RUN mkdir -p /var/www/certbot
 
-USER nginxuser
+# Create non-root user (optional but recommended for security)
+RUN addgroup -g 1001 -S nginxgroup && \
+    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginxgroup -g nginx nginxuser
+
+# Set proper permissions for SSL certificates
+RUN chown -R nginxuser:nginxgroup /var/cache/nginx /var/log/nginx /var/www/certbot && \
+    chmod -R 755 /var/www/certbot
+
+# USER nginxuser  # Uncomment for production
 
 EXPOSE 80 443
 
