@@ -124,7 +124,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
-      - ./fe-cleanswitch/build:/usr/share/nginx/html:ro
+      - ./fe-cleanswitch:/app
     networks:
       - app_network
     healthcheck:
